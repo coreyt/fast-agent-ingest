@@ -1,0 +1,190 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # ── Rust: lint + test ───────────────────────────────────────────────────────
+  rust:
+    name: Rust (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Lint
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace
+
+  # ── Python ─────────────────────────────────────────────────────────────────
+  python:
+    name: Python ${{ matrix.python }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install maturin + pytest
+        run: pip install maturin pytest
+
+      - name: Build Python binding
+        run: cd bindings/python && maturin develop --release
+
+      - name: Run conformance tests
+        run: cd tests/conformance/python && python -m pytest -v
+
+  # ── Node.js ─────────────────────────────────────────────────────────────────
+  nodejs:
+    name: Node.js ${{ matrix.node }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install napi-rs CLI
+        run: npm install -g @napi-rs/cli
+
+      - name: Build Node.js binding
+        run: cd bindings/nodejs && napi build --platform --release
+
+      - name: Run conformance tests
+        run: cd tests/conformance/nodejs && node --test
+
+  # ── Go ──────────────────────────────────────────────────────────────────────
+  go:
+    name: Go (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # Windows CGO is more complex — tracked in a separate workflow
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build C ABI library
+        run: cargo build --package fast-agent-ingest-c-ffi --release
+
+      - name: Run Go tests
+        run: cd bindings/go && CGO_ENABLED=1 go test ./...
+
+  # ── C# ──────────────────────────────────────────────────────────────────────
+  csharp:
+    name: C# (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build C ABI library
+        run: cargo build --package fast-agent-ingest-c-ffi --release
+
+      - name: Build C# binding
+        run: cd bindings/csharp && dotnet build -c Release
+
+      - name: Run C# tests
+        run: cd bindings/csharp && dotnet test -c Release
+
+  # ── C++ ─────────────────────────────────────────────────────────────────────
+  cpp:
+    name: C++ (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build C ABI library + generate header
+        run: |
+          cargo build --package fast-agent-ingest-c-ffi --release
+          cargo install cbindgen --locked
+          cd bindings/c-ffi && cbindgen --config cbindgen.toml --output ../../include/fast_agent_ingest.h
+
+      - name: Configure CMake
+        run: cmake -S bindings/cpp -B bindings/cpp/build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build C++ tests
+        run: cmake --build bindings/cpp/build
+
+      - name: Run C++ conformance tests
+        run: cd bindings/cpp/build && ctest --output-on-failure

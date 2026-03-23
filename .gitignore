@@ -205,3 +205,36 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Generated C headers
+/include/fast_agent_ingest.h
+
+# Node.js
+node_modules/
+bindings/nodejs/*.node
+bindings/nodejs/index.js
+bindings/nodejs/index.d.ts
+bindings/browser/pkg/
+
+# Python
+bindings/python/fast_agent_ingest*.so
+bindings/python/*.pyd
+
+# C# build artifacts
+bindings/csharp/**/bin/
+bindings/csharp/**/obj/
+
+# C++ build artifacts
+bindings/cpp/build/
+
+# Go
+bindings/go/*.a
+bindings/go/*.h
+
+.wake/*
+!.wake/shared/

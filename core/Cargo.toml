@@ -1,0 +1,15 @@
+[package]
+name        = "fast-agent-ingest-core"
+version.workspace   = true
+edition.workspace   = true
+license.workspace   = true
+description = "HTML → Markdown conversion for LLM/agent consumption"
+
+[dependencies]
+html5ever        = { workspace = true }
+markup5ever_rcdom = { workspace = true }
+
+[dev-dependencies]
+# Used only for benchmarking accuracy against existing approaches — not wrapped
+# htmd        = "0.1"       # uncomment when writing accuracy benchmarks
+# readability = "0.0.1"

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noisy Page</title>
+  <style>body { font-family: sans-serif; }</style>
+  <script>console.log("tracker loaded");</script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/">Home</a> | <a href="/news">News</a> | <a href="/contact">Contact</a>
+  </nav>
+
+  <div class="ad-banner">
+    <p>BUY NOW — SPONSORED CONTENT</p>
+  </div>
+
+  <article>
+    <h1>Real Article Title</h1>
+    <p>This is the actual article content that an LLM should receive.</p>
+    <p>It contains useful information without the surrounding noise.</p>
+  </article>
+
+  <aside class="sidebar">
+    <h3>Related Articles</h3>
+    <ul>
+      <li><a href="/other">Another Article</a></li>
+    </ul>
+  </aside>
+
+  <div class="social-share">
+    <button>Share on Twitter</button>
+    <button>Share on Facebook</button>
+  </div>
+
+  <footer class="footer">
+    <p>© 2024 Example Corp. All rights reserved.</p>
+    <nav class="footer-nav">
+      <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a>
+    </nav>
+  </footer>
+
+  <script>analytics.track("page_view");</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Code Examples</title></head>
+<body>
+  <article>
+    <h1>Code Examples</h1>
+
+    <p>Here is an inline code reference: <code>println!</code> is the Rust print macro.</p>
+
+    <h2>Fibonacci in Rust</h2>
+    <pre><code class="language-rust">fn fibonacci(n: u64) -&gt; u64 {
+    match n {
+        0 =&gt; 0,
+        1 =&gt; 1,
+        _ =&gt; fibonacci(n - 1) + fibonacci(n - 2),
+    }
+}</code></pre>
+
+    <h2>Same in Python</h2>
+    <pre><code class="language-python">def fibonacci(n: int) -&gt; int:
+    if n &lt;= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)</code></pre>
+  </article>
+</body>
+</html>

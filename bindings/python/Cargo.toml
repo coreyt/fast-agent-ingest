@@ -1,0 +1,14 @@
+[package]
+name       = "fast-agent-ingest-python"
+version.workspace   = true
+edition.workspace   = true
+license.workspace   = true
+description = "Python bindings for fast-agent-ingest"
+
+[lib]
+name       = "fast_agent_ingest"
+crate-type = ["cdylib"]
+
+[dependencies]
+fast-agent-ingest-core = { workspace = true }
+pyo3 = { version = "0.23", features = ["extension-module"] }

@@ -1,0 +1,13 @@
+[package]
+name       = "fast-agent-ingest-c-ffi"
+version.workspace   = true
+edition.workspace   = true
+license.workspace   = true
+description = "C ABI bindings for fast-agent-ingest (consumed by Go, C#, C++)"
+
+[lib]
+# Both cdylib (.so/.dll/.dylib) and staticlib (.a) so consumers can choose.
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+fast-agent-ingest-core = { workspace = true }

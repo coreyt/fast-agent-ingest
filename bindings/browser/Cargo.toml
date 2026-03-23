@@ -1,0 +1,13 @@
+[package]
+name       = "fast-agent-ingest-browser"
+version.workspace   = true
+edition.workspace   = true
+license.workspace   = true
+description = "Browser/WASM bindings for fast-agent-ingest"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fast-agent-ingest-core = { workspace = true }
+wasm-bindgen = "0.2"

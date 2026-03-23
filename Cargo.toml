@@ -1,0 +1,26 @@
+[workspace]
+members = [
+    "core",
+    "bindings/python",
+    "bindings/nodejs",
+    "bindings/browser",
+    "bindings/c-ffi",
+]
+resolver = "2"
+
+[workspace.package]
+version    = "0.1.0"
+edition    = "2021"
+license    = "MIT"
+repository = "https://github.com/coreyt/fast-agent-ingest"
+
+[workspace.dependencies]
+fast-agent-ingest-core = { path = "core" }
+html5ever               = "0.38"
+markup5ever_rcdom       = "0.38"
+
+[profile.release]
+opt-level = 3
+lto       = true
+codegen-units = 1
+strip     = true

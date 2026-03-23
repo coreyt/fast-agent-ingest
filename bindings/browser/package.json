@@ -1,0 +1,17 @@
+{
+  "name": "@fast-agent-ingest/browser",
+  "version": "0.1.0",
+  "description": "HTML → Markdown for LLM/agent consumption (browser WASM)",
+  "main": "pkg/fast_agent_ingest_browser.js",
+  "types": "pkg/fast_agent_ingest_browser.d.ts",
+  "license": "MIT",
+  "files": ["pkg/"],
+  "scripts": {
+    "build": "wasm-pack build --target web --release",
+    "build:nodejs": "wasm-pack build --target nodejs --release",
+    "build:bundler": "wasm-pack build --target bundler --release"
+  },
+  "devDependencies": {
+    "wasm-pack": "^0.13.0"
+  }
+}

@@ -1,0 +1,17 @@
+[package]
+name       = "fast-agent-ingest-nodejs"
+version.workspace   = true
+edition.workspace   = true
+license.workspace   = true
+description = "Node.js bindings for fast-agent-ingest (napi-rs)"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fast-agent-ingest-core = { workspace = true }
+napi        = { version = "2", features = ["napi4"] }
+napi-derive = "2"
+
+[build-dependencies]
+napi-build = "2"

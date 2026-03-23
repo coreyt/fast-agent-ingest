@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>FastAgentIngest</RootNamespace>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>FastAgentIngest</PackageId>
+    <Version>0.1.0</Version>
+    <Description>HTML → Markdown for LLM/agent consumption</Description>
+  </PropertyGroup>
+</Project>
